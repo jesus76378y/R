@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corazón Animado</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+        }
+
+        .heart {
+            font-size: 120px;
+            color: #ff3366;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            text-shadow: 0 0 20px rgba(255, 51, 102, 0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .broken-heart {
+            display: inline-block;
+            position: relative;
+        }
+
+        .heart-part {
+            display: inline-block;
+            transition: all 0.5s ease-out;
+        }
+
+        .heart-part.left {
+            animation: breakLeft 2s ease-out;
+        }
+
+        .heart-part.right {
+            animation: breakRight 2s ease-out;
+        }
+
+        @keyframes breakLeft {
+            0% {
+                transform: translateX(0) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translateX(-30px) rotate(-20deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateX(-50px) rotate(-45deg) translateY(20px);
+                opacity: 0.3;
+            }
+        }
+
+        @keyframes breakRight {
+            0% {
+                transform: translateX(0) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translateX(30px) rotate(20deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateX(50px) rotate(45deg) translateY(20px);
+                opacity: 0.3;
+            }
+        }
+
+        .crack-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+            color: #333;
+            z-index: 15;
+            animation: crackAppear 0.5s ease-out;
+        }
+
+        @keyframes crackAppear {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .heart-shatter {
+            animation: shatter 3s ease-out forwards;
+        }
+
+        @keyframes shatter {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            20% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.8);
+                opacity: 0.4;
+                filter: grayscale(70%);
+            }
+        }
+
+        .heart:hover {
+            transform: scale(1.1);
+            text-shadow: 0 0 30px rgba(255, 51, 102, 0.8);
+        }
+
+        .controls {
+            margin-top: 50px;
+            display: flex;
+            gap: 30px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-grow {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+
+        .btn-grow:hover {
+            background: linear-gradient(45deg, #ff5252, #ff7979);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-shrink {
+            background: linear-gradient(45deg, #2c2c2c, #404040);
+            color: white;
+        }
+
+        .btn-shrink:hover {
+            background: linear-gradient(45deg, #1a1a1a, #2d2d2d);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(44, 44, 44, 0.4);
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 20px;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .floating-heart.love {
+            color: #ff3366;
+            animation: floatUp 3s ease-out forwards;
+        }
+
+        .floating-heart.dark {
+            color: #333;
+            animation: floatDown 3s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-100px) scale(1.2) rotate(180deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-200px) scale(0.8) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatDown {
+            0% {
+                transform: translateY(0) scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(100px) scale(1.2) rotate(-180deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(200px) scale(0.8) rotate(-360deg);
+                opacity: 0;
+            }
+        }
+
+        .grow-animation {
+            animation: heartGrow 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .shrink-animation {
+            animation: heartShrink 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes heartGrow {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes heartShrink {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.7); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                text-shadow: 0 0 20px rgba(255, 51, 102, 0.5);
+            }
+            50% {
+                text-shadow: 0 0 40px rgba(255, 51, 102, 0.8), 
+                           0 0 60px rgba(255, 51, 102, 0.6);
+            }
+            100% {
+                text-shadow: 0 0 20px rgba(255, 51, 102, 0.5);
+            }
+        }
+
+        .love-banner {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.15) 0%, 
+                rgba(255, 192, 203, 0.2) 50%, 
+                rgba(255, 255, 255, 0.15) 100%);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 30px 50px;
+            margin-bottom: 40px;
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.2),
+                inset 0 2px 10px rgba(255, 255, 255, 0.3),
+                0 0 30px rgba(255, 105, 180, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .love-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .love-question {
+            font-family: 'Georgia', serif;
+            font-size: 42px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(255, 105, 180, 0.6),
+                0 0 40px rgba(255, 20, 147, 0.4);
+            margin: 15px 0;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 2;
+            animation: textGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% {
+                text-shadow: 
+                    3px 3px 6px rgba(0, 0, 0, 0.5),
+                    0 0 20px rgba(255, 105, 180, 0.6),
+                    0 0 40px rgba(255, 20, 147, 0.4);
+            }
+            100% {
+                text-shadow: 
+                    3px 3px 6px rgba(0, 0, 0, 0.5),
+                    0 0 30px rgba(255, 105, 180, 0.9),
+                    0 0 60px rgba(255, 20, 147, 0.7),
+                    0 0 80px rgba(255, 105, 180, 0.5);
+            }
+        }
+
+        .banner-decoration {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .top-decoration {
+            margin-bottom: 10px;
+        }
+
+        .bottom-decoration {
+            margin-top: 10px;
+        }
+
+        .star, .heart-small, .flower, .infinity {
+            font-size: 24px;
+            animation: decorationFloat 3s ease-in-out infinite;
+        }
+
+        .star {
+            color: #ffd700;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+            animation-delay: 0s;
+        }
+
+        .heart-small {
+            color: #ff69b4;
+            text-shadow: 0 0 15px rgba(255, 105, 180, 0.7);
+            animation-delay: 1s;
+        }
+
+        .flower {
+            color: #ff1493;
+            text-shadow: 0 0 15px rgba(255, 20, 147, 0.7);
+            animation-delay: 0.5s;
+        }
+
+        .infinity {
+            color: #e6e6fa;
+            font-size: 30px;
+            font-weight: bold;
+            text-shadow: 0 0 15px rgba(230, 230, 250, 0.7);
+            animation-delay: 1.5s;
+        }
+
+        @keyframes decorationFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-8px) rotate(5deg);
+            }
+            50% {
+                transform: translateY(-5px) rotate(0deg);
+            }
+            75% {
+                transform: translateY(-10px) rotate(-5deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="love-banner">
+            <div class="banner-decoration top-decoration">
+                <span class="star">✨</span>
+                <span class="heart-small">💕</span>
+                <span class="star">✨</span>
+            </div>
+            <h1 class="love-question">¿Nuestro amor incrementa?</h1>
+            <div class="banner-decoration bottom-decoration">
+                <span class="flower">🌹</span>
+                <span class="infinity">∞</span>
+                <span class="flower">🌹</span>
+            </div>
+        </div>
+        <div class="heart pulse" id="mainHeart">❤</div>
+        <div class="controls">
+            <button class="btn btn-grow" onclick="growHeart()">
+                💗 Crecer
+            </button>
+            <button class="btn btn-shrink" onclick="shrinkHeart()">
+                🖤 Disminuir
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let heartSize = 120;
+        const minSize = 60;
+        const maxSize = 200;
+        let isBroken = false;
+
+        function growHeart() {
+            if (isBroken) {
+                repairHeart();
+                return;
+            }
+
+            const heart = document.getElementById('mainHeart');
+            
+            // Aumentar tamaño
+            if (heartSize < maxSize) {
+                heartSize += 15;
+                heart.style.fontSize = heartSize + 'px';
+            }
+            
+            // Agregar animación
+            heart.classList.add('grow-animation');
+            setTimeout(() => {
+                heart.classList.remove('grow-animation');
+            }, 600);
+            
+            // Crear corazones flotantes rosados
+            createFloatingHearts('love', 8);
+        }
+
+        function shrinkHeart() {
+            if (isBroken) return;
+
+            const heart = document.getElementById('mainHeart');
+            
+            // Disminuir tamaño
+            if (heartSize > minSize) {
+                heartSize -= 15;
+                heart.style.fontSize = heartSize + 'px';
+            }
+            
+            // Verificar si llegó al límite mínimo
+            if (heartSize <= minSize) {
+                breakHeart();
+                return;
+            }
+            
+            // Agregar animación
+            heart.classList.add('shrink-animation');
+            setTimeout(() => {
+                heart.classList.remove('shrink-animation');
+            }, 600);
+            
+            // Crear corazones flotantes negros
+            createFloatingHearts('dark', 8);
+        }
+
+        function breakHeart() {
+            const heart = document.getElementById('mainHeart');
+            isBroken = true;
+            
+            // Cambiar el contenido del corazón a partes rotas
+            heart.innerHTML = `
+                <div class="broken-heart">
+                    <span class="heart-part left">💔</span>
+                    <span class="crack-effect">⚡</span>
+                    <span class="heart-part right">💔</span>
+                </div>
+            `;
+            
+            // Agregar efectos de ruptura
+            heart.classList.add('heart-shatter');
+            
+            // Cambiar el texto del botón
+            const shrinkBtn = document.querySelector('.btn-shrink');
+            const growBtn = document.querySelector('.btn-grow');
+            shrinkBtn.style.opacity = '0.5';
+            shrinkBtn.style.cursor = 'not-allowed';
+            growBtn.innerHTML = '💖 Reparar';
+            
+            // Crear efectos de corazones rotos
+            createBrokenHeartEffect();
+            
+            // Cambiar colores de fondo temporalmente
+            document.body.style.background = 'linear-gradient(135deg, #4a4a4a 0%, #2d2d2d 100%)';
+        }
+
+        function repairHeart() {
+            const heart = document.getElementById('mainHeart');
+            
+            // Restaurar el corazón
+            heart.innerHTML = '❤';
+            heart.classList.remove('heart-shatter');
+            isBroken = false;
+            heartSize = 120;
+            heart.style.fontSize = heartSize + 'px';
+            
+            // Restaurar botones
+            const shrinkBtn = document.querySelector('.btn-shrink');
+            const growBtn = document.querySelector('.btn-grow');
+            shrinkBtn.style.opacity = '1';
+            shrinkBtn.style.cursor = 'pointer';
+            growBtn.innerHTML = '💗 Crecer';
+            
+            // Restaurar fondo
+            document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            
+            // Efecto de reparación
+            heart.classList.add('grow-animation');
+            setTimeout(() => {
+                heart.classList.remove('grow-animation');
+            }, 600);
+            
+            // Crear corazones de sanación
+            createFloatingHearts('love', 12);
+        }
+
+        function createBrokenHeartEffect() {
+            const container = document.querySelector('.container');
+            
+            // Crear múltiples corazones rotos cayendo
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const brokenHeart = document.createElement('div');
+                    brokenHeart.classList.add('floating-heart');
+                    brokenHeart.style.position = 'absolute';
+                    brokenHeart.style.fontSize = Math.random() * 15 + 15 + 'px';
+                    brokenHeart.style.color = '#666';
+                    brokenHeart.style.pointerEvents = 'none';
+                    brokenHeart.style.zIndex = '5';
+                    
+                    const brokenSymbols = ['💔', '⚡', '😢', '🥀', '💸'];
+                    brokenHeart.textContent = brokenSymbols[Math.floor(Math.random() * brokenSymbols.length)];
+                    
+                    // Posición aleatoria
+                    const angle = (Math.PI * 2 * i) / 15;
+                    const radius = 100;
+                    const x = Math.cos(angle) * radius + (Math.random() - 0.5) * 80;
+                    const y = Math.sin(angle) * radius + (Math.random() - 0.5) * 80;
+                    
+                    brokenHeart.style.left = calc(50% + ${x}px);
+                    brokenHeart.style.top = calc(50% + ${y}px);
+                    
+                    // Animación de caída
+                    brokenHeart.animate([
+                        { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                        { transform: 'translateY(300px) rotate(720deg)', opacity: 0 }
+                    ], {
+                        duration: Math.random() * 2000 + 2000,
+                        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                    });
+                    
+                    container.appendChild(brokenHeart);
+                    
+                    // Remover después de la animación
+                    setTimeout(() => {
+                        if (brokenHeart.parentNode) {
+                            brokenHeart.parentNode.removeChild(brokenHeart);
+                        }
+                    }, 4000);
+                }, i * 100);
+            }
+        }
+
+        function createFloatingHearts(type, count) {
+            const container = document.querySelector('.container');
+            
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const floatingHeart = document.createElement('div');
+                    floatingHeart.classList.add('floating-heart', type);
+                    
+                    // Usar diferentes símbolos de corazón
+                    const heartSymbols = type === 'love' 
+                        ? ['💖', '💕', '💗', '💓', '💝'] 
+                        : ['🖤', '💔', '🤍', '🖤', '♠'];
+                    
+                    floatingHeart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                    
+                    // Posición aleatoria alrededor del corazón principal
+                    const angle = (Math.PI * 2 * i) / count;
+                    const radius = 80;
+                    const x = Math.cos(angle) * radius + (Math.random() - 0.5) * 40;
+                    const y = Math.sin(angle) * radius + (Math.random() - 0.5) * 40;
+                    
+                    floatingHeart.style.left = calc(50% + ${x}px);
+                    floatingHeart.style.top = calc(50% + ${y}px);
+                    
+                    container.appendChild(floatingHeart);
+                    
+                    // Remover después de la animación
+                    setTimeout(() => {
+                        if (floatingHeart.parentNode) {
+                            floatingHeart.parentNode.removeChild(floatingHeart);
+                        }
+                    }, 3000);
+                }, i * 100);
+            }
+        }
+
+        // Efecto de partículas de fondo
+        function createBackgroundParticles() {
+            setInterval(() => {
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.fontSize = '12px';
+                particle.style.color = 'rgba(255, 255, 255,
